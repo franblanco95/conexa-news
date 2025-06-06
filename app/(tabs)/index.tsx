@@ -1,75 +1,114 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import NewsCard from '@/components/NewsCard';
+import { useGetNews } from '@/src/hooks/useGetNews';
+import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
+  const { data: news, isLoading } = useGetNews();
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text style={styles.loadingText}>{t('news.loadingNews')}</Text>
+      </View>
+    );
+  }
+
+  const filteredNews =
+    news?.filter(
+      (item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.content.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <View style={styles.container}>
+      <LinearGradient
+        colors={['#4c669f', '#3b5998', '#192f6a']}
+        style={[styles.header, { paddingTop: insets.top }]}
+      >
+        <Text style={styles.title}>{t('news.title')}</Text>
+        <TextInput
+          style={styles.searchInput}
+          placeholder={t('news.search')}
+          placeholderTextColor="rgba(255,255,255,0.6)"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </LinearGradient>
+
+      {filteredNews.length > 0 ? (
+        <FlatList
+          data={filteredNews}
+          renderItem={({ item }) => <NewsCard news={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>{t('news.emptyList')}</Text>
+        </View>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  header: {
+    padding: 20,
+    paddingBottom: 30,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 15,
+  },
+  searchInput: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    color: 'white',
+  },
+  listContent: {
+    padding: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#666',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  emptyContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
   },
 });
