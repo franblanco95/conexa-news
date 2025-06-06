@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+# ConexaNews 📰
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Es una aplicación móvil moderna para consulta de noticias desarrollada con React Native y Expo que muestra información de la API pública JSONPlaceholder.
 
-## Get started
+## 🏗️ Arquitectura y Patrones de Diseño
 
-1. Install dependencies
+### Patrón de Arquitectura
 
-   ```bash
-   npm install
-   ```
+ConexaNews utiliza una arquitectura basada en **componentes** con **gestión de estado centralizada**, siguiendo los principios de:
 
-2. Start the app
+- **Separación de responsabilidades**: La lógica de negocio, la presentación y los datos están claramente separados.
+- **Modularidad**: Componentes reutilizables e independientes.
+- **Estado centralizado**: Usando Zustand para gestionar el estado global de la aplicación.
 
-   ```bash
-   npx expo start
-   ```
+## 📚 Bibliotecas Principales
 
-In the output, you'll find options to open the app in a
+- **Expo Router**: Sistema de enrutamiento basado en archivos.
+- **Zustand**: Gestión de estado global ligera y simple.
+- **React Query**: Gestión de estado del servidor y caché.
+- **Axios**: Cliente HTTP para peticiones a la API.
+- **AsyncStorage**: Almacenamiento persistente.
+- **i18next**: Internacionalización.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🚀 Instalación y Ejecución
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. **Clonar el repositorio**
 
 ```bash
-npm run reset-project
+git clone [https://github.com/franblanco95/conexa-news.git]
+cd ConexaNews
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. **Instalar dependencias**
 
-## Learn more
+```bash
+npm install / yarn install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. **Iniciar la aplicación**
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm run ios
+```
 
-## Join the community
+## 🧪 Pruebas
 
-Join our community of developers creating universal apps.
+La aplicación incluye pruebas unitarias implementadas con Jest y React Testing Library para garantizar la calidad del código y el correcto funcionamiento de los componentes.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Ejecutar pruebas
+
+Para ejecutar todas las pruebas unitarias:
+
+```bash
+npm test
+```
+
+Para ejecutar las pruebas en modo watch (útil durante el desarrollo):
+
+```bash
+npm run test:watch
+```
+
+Para generar un informe de cobertura de código:
+
+```bash
+npm run test:coverage
+```
+
+## 🌐 Internacionalización
+
+La aplicación soporta por ahora idiomas como español e ingles, utilizando i18next. Los archivos de traducción se encuentran en `src/i18n/`.
+
+## 📋 Funcionalidades Principales
+
+- Listado de noticias y usuarios.
+- Detalle de noticias y usuarios.
+- Sistema de favoritos
+- Cambio de idioma
